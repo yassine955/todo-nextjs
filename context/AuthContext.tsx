@@ -1,4 +1,4 @@
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -6,31 +6,35 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
-import { doc, getDoc } from "firebase/firestore";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { CurrentUserTypes } from "../types/currentUser";
 
-const AuthContext = createContext({});
+const AuthContext = createContext<{
+  currentUser: CurrentUserTypes | undefined;
+  login: any;
+  logout: any;
+  signup: any;
+}>({
+  currentUser: null!,
+  login: null,
+  logout: null,
+  signup: null,
+});
 
 export function useAuth() {
   return useContext(AuthContext);
 }
 
 export function AuthProvider({ children }: any) {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<CurrentUserTypes>();
+  const [loading, setLoading] = useState<boolean>();
 
-  function signup(email: any, password: any) {
+  function signup(email: string, password: string) {
     createUserWithEmailAndPassword(auth, email, password);
     return;
   }
 
-  function login(email: any, password: any) {
+  function login(email: string, password: string) {
     return signInWithEmailAndPassword(auth, email, password);
   }
 

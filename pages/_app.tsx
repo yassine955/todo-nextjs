@@ -3,7 +3,6 @@ import type { AppProps } from "next/app";
 import { AuthProvider } from "../context/AuthContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // https://github.com/jamezmca/nextjs-todo/blob/main/components/TodoCard.js
   return (
     <AuthProvider>
       <Component {...pageProps} />

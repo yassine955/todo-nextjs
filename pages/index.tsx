@@ -1,24 +1,21 @@
 import { Fragment } from "react";
+import { HeaderComponent } from "../components/Header";
 import { LoginComponent } from "../components/Login";
 import UserDashboard from "../components/UserDashboard";
 import { useAuth } from "../context/AuthContext";
 
 const Home = () => {
-  const { currentUser, logout } = useAuth() as any;
-  console.log(currentUser);
+  const { currentUser, logout } = useAuth();
 
   return (
     <Fragment>
-      {!currentUser && <LoginComponent />}
-      {currentUser && <UserDashboard />}
-
-      <h2
-        onClick={() => {
-          logout();
-        }}
-      >
-        Logout
-      </h2>
+      {currentUser && (
+        <HeaderComponent logout={logout} currentUser={currentUser} />
+      )}
+      <div className='container mx-auto px-32 py-32'>
+        {!currentUser && <LoginComponent />}
+        {currentUser && <UserDashboard />}
+      </div>
     </Fragment>
   );
 };
