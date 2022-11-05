@@ -7,6 +7,8 @@ import { useAuth } from "../context/AuthContext";
 const Home = () => {
   const { currentUser, logout } = useAuth();
 
+  console.log(currentUser);
+
   return (
     <Fragment>
       {currentUser && (

@@ -16,7 +16,7 @@ export const HeaderComponent = ({
           logout();
         }}
       >
-        Logout
+        Uitloggen
       </button>
 
       <h1 className='text-white'>

@@ -10,14 +10,18 @@ export default function UserDashboard() {
 
   const [edit, setEdit] = useState<any>(null);
   const [todo, setTodo] = useState<any>("");
+  const [errors, setError] = useState<string>("");
   const [edittedValue, setEdittedValue] = useState<any>("");
 
   const { todos, setTodos, loading, error } = useFetchTodos();
 
   async function handleAddTodo() {
     if (!todo) {
+      setError("Vul een todo in, hij is nu nog leeg");
       return;
     }
+
+    setError("");
 
     const newKey =
       Object.keys(todos).length === 0
@@ -65,8 +69,6 @@ export default function UserDashboard() {
 
   function handleAddEdit(todoKey: any) {
     return () => {
-      console.log(todos[todoKey]);
-      console.log("bannan");
       setEdit(todoKey);
       setEdittedValue(todos[todoKey]);
     };
@@ -96,7 +98,7 @@ export default function UserDashboard() {
       <div className='flex flex-col'>
         <input
           type='text'
-          placeholder='Enter todo'
+          placeholder='Vul een todo in'
           className='bg-red-100 px-4 py-2 rounded-md font-bold mb-4'
           value={todo}
           onChange={(e) => setTodo(e.target.value)}
@@ -109,8 +111,14 @@ export default function UserDashboard() {
           onClick={handleAddTodo}
           type='button'
         >
-          {loading ? "Loading..." : "ADD"}
+          {loading ? "Loading..." : "Toevoegen"}
         </button>
+
+        {errors && (
+          <div className='max-w-[40ch] bg-red-500 font-bold text-white  p-2 rounded-md mt-4 self-center'>
+            {errors}
+          </div>
+        )}
         {loading && (
           <div role='status' className='p-4 self-center'>
             <svg
