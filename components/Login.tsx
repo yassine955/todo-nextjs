@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { Alert } from "./Alert";
 
 export const LoginComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -7,7 +8,7 @@ export const LoginComponent = () => {
   const [error, setError] = useState<string>("");
   const [logging, setLogging] = useState<boolean>(true);
 
-  const { login, signup, currentUser } = useAuth() as any;
+  const { login, signup, currentUser, signUpWithGoogle } = useAuth() as any;
 
   async function SubmitHandler() {
     if (!email || !password) {
@@ -17,14 +18,14 @@ export const LoginComponent = () => {
 
     if (logging) {
       try {
-        await login(email, password);
+        await login(email.toLowerCase(), password.toLowerCase());
       } catch (error) {
         setError("Verkeerde Email of wachtwoord");
       }
       return;
     }
 
-    const res = await signup(email, password);
+    const res = await signup(email.toLowerCase(), password.toLowerCase());
 
     if (!res?.success) {
       setError(res?.msg);
@@ -68,6 +69,9 @@ export const LoginComponent = () => {
             <div id='button' className='flex flex-col w-full my-5'>
               <button
                 type='button'
+                name='login'
+                onClick={SubmitHandler}
+                id='login'
                 className='w-full py-4 bg-green-600 rounded-lg text-green-100'
               >
                 <div className='flex flex-row items-center justify-center'>
@@ -87,12 +91,28 @@ export const LoginComponent = () => {
                       ></path>
                     </svg>
                   </div>
-                  <div onClick={SubmitHandler} className='font-bold'>
-                    Toegang
-                  </div>
+                  <div className='font-bold'>Toegang</div>
                 </div>
               </button>
+              <button
+                type='button'
+                onClick={async () => {
+                  if (!email || !password) {
+                    setError("");
+                  }
 
+                  return await signUpWithGoogle();
+                }}
+                className='w-full py-4 bg-gray-300 rounded-lg text-gray-600 mt-4'
+              >
+                <div className='flex flex-row items-center justify-center'>
+                  <div className='mr-2'>
+                    <img src='/icons8-google.svg' width={25} />
+                  </div>
+                  <div className='font-bold'>Google</div>
+                </div>
+              </button>
+              <hr className='mt-8' />
               <div className='flex justify-evenly mt-5'>
                 <p
                   onClick={() => setLogging(!logging)}
@@ -101,11 +121,8 @@ export const LoginComponent = () => {
                   {!logging ? "Inloggen" : "Registreren"}
                 </p>
               </div>
-              {error && (
-                <div className='max-w-[40ch] bg-red-500 font-bold text-white  p-2 rounded-md mt-4 self-center'>
-                  {error}
-                </div>
-              )}
+
+              {error && <Alert error={error} />}
             </div>
           </form>
         </div>

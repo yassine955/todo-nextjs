@@ -1,13 +1,12 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { HeaderComponent } from "../components/Header";
+import { LoadingComponent } from "../components/Loading";
 import { LoginComponent } from "../components/Login";
 import UserDashboard from "../components/UserDashboard";
 import { useAuth } from "../context/AuthContext";
 
 const Home = () => {
   const { currentUser, logout } = useAuth();
-
-  console.log(currentUser);
 
   return (
     <Fragment>

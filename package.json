@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.13",
     "apollo-server-micro": "^3.10.3",
     "cors": "^2.8.5",
     "faunadb": "^4.7.0",

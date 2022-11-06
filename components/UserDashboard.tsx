@@ -4,6 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase";
 import useFetchTodos from "../hooks/fetchTodos";
 import TodoCard from "./TodoCard";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { Alert } from "./Alert";
 
 export default function UserDashboard() {
   const { currentUser } = useAuth() as any;
@@ -93,32 +95,41 @@ export default function UserDashboard() {
     };
   }
 
+  console.log(todos);
+
   return (
     <Fragment>
       <div className='flex flex-col'>
-        <input
-          type='text'
-          placeholder='Vul een todo in'
-          className='bg-red-100 px-4 py-2 rounded-md font-bold mb-4'
-          value={todo}
-          onChange={(e) => setTodo(e.target.value)}
-        />
+        <div id='input' className='flex flex-col w-full my-5'>
+          <label htmlFor='todo' className='text-gray-500 mb-2'>
+            Vul iets in...
+          </label>
+          <input
+            type='text'
+            value={todo}
+            onChange={(e) => setTodo(e.target.value)}
+            placeholder='Vul een todo in'
+            className='appearance-none border-2 border-gray-100 rounded-lg px-4 py-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:shadow-lg'
+          />
+        </div>
+
         <button
-          style={{
-            width: "fit-content",
-          }}
-          className='flex items-center bg-black px-4 py-2 self-center rounded-md font-bold text-white'
-          onClick={handleAddTodo}
           type='button'
+          onClick={handleAddTodo}
+          className='w-full py-4 bg-green-600 rounded-lg text-green-100 mb-4'
         >
-          {loading ? "Loading..." : "Toevoegen"}
+          <div className='flex flex-row items-center justify-center'>
+            <div className='mr-2'>
+              <PlusCircleIcon className='h-6 w-6 mr-4 text-white' />
+            </div>
+            <div className='font-bold'>
+              {loading ? "Loading..." : "Toevoegen"}
+            </div>
+          </div>
         </button>
 
-        {errors && (
-          <div className='max-w-[40ch] bg-red-500 font-bold text-white  p-2 rounded-md mt-4 self-center'>
-            {errors}
-          </div>
-        )}
+        {errors && <Alert error={errors} />}
+
         {loading && (
           <div role='status' className='p-4 self-center'>
             <svg
@@ -144,22 +155,26 @@ export default function UserDashboard() {
 
       {!loading && (
         <Fragment>
-          {Object.keys(todos).map((todo, i) => {
-            return (
-              <TodoCard
-                handleEditTodo={handleEditTodo}
-                key={i}
-                handleAddEdit={handleAddEdit}
-                edit={edit}
-                todoKey={todo}
-                edittedValue={edittedValue}
-                setEdittedValue={setEdittedValue}
-                handleDelete={handleDelete}
-              >
-                {todos[todo]}
-              </TodoCard>
-            );
-          })}
+          {Object.keys(todos).length === 0 ? (
+            <Alert error='U heeft momenteel geen todos, voeg er een toe 😊' />
+          ) : (
+            Object.keys(todos).map((todo, i) => {
+              return (
+                <TodoCard
+                  handleEditTodo={handleEditTodo}
+                  key={i}
+                  handleAddEdit={handleAddEdit}
+                  edit={edit}
+                  todoKey={todo}
+                  edittedValue={edittedValue}
+                  setEdittedValue={setEdittedValue}
+                  handleDelete={handleDelete}
+                >
+                  {todos[todo]}
+                </TodoCard>
+              );
+            })
+          )}
         </Fragment>
       )}
     </Fragment>

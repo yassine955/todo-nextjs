@@ -9,6 +9,8 @@ export interface CurrentUserTypes {
   lastLoginAt: string;
   apiKey: string;
   appName: string;
+  photoURL: string;
+  displayName: string;
 }
 export interface ProviderDataEntity {
   providerId: string;

@@ -4,11 +4,13 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { CurrentUserTypes } from "../types/currentUser";
-import { stringify } from "querystring";
+import { LoadingComponent } from "../components/Loading";
 
 const AuthContext = createContext<{
   currentUser: CurrentUserTypes | undefined;
@@ -28,7 +30,30 @@ export function useAuth() {
 
 export function AuthProvider({ children }: any) {
   const [currentUser, setCurrentUser] = useState<CurrentUserTypes>();
-  const [loading, setLoading] = useState<boolean>();
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const signUpWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    return await signInWithPopup(auth, provider)
+      .then((res) => {
+        if (res?.user?.uid) {
+          return {
+            success: true,
+            msg: "",
+          };
+        }
+      })
+      .catch((e) => {
+        if (e) {
+          return {
+            success: false,
+            msg: "Google geeft een foutmelding",
+          };
+        }
+
+        return;
+      });
+  };
 
   const signup = async (email: string, password: string) => {
     return await createUserWithEmailAndPassword(auth, email, password)
@@ -44,7 +69,7 @@ export function AuthProvider({ children }: any) {
         if (err) {
           return {
             success: false,
-            msg: "Deze email is al in gebruik",
+            msg: "Dit email is al in gebruik",
           };
         }
 
@@ -74,7 +99,10 @@ export function AuthProvider({ children }: any) {
     login,
     signup,
     logout,
+    signUpWithGoogle,
   };
+
+  if (loading) return <LoadingComponent />;
 
   return (
     <AuthContext.Provider value={value}>

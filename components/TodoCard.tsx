@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 export default function TodoCard(props: any) {
   const {
@@ -13,19 +13,36 @@ export default function TodoCard(props: any) {
   } = props;
 
   return (
-    <div className='p-2 relative sm:p-3 border flex items-stretch border-white border-solid '>
+    <div
+      className='p-2 relative sm:p-3 border flex items-stretch border-white border-solid transition ease-in-out delay-700 bg-blue-500 duration-300'
+      style={{
+        background: "#f9dbce",
+        borderRadius: "5px",
+        marginBottom: "10px",
+      }}
+    >
       <div className='flex-1 flex'>
         {!(edit === todoKey) ? (
-          <>{children}</>
+          <Fragment>
+            <div>
+              <p className='font-bold'>{`${todoKey}. ${children}`}</p>
+            </div>
+          </Fragment>
         ) : (
           <input
-            className='bg-inherit flex-1 text-black font-bold outline-none'
-            placeholder='Vul in'
+            className='bg-inherit flex-1 text-white font-bold outline-none'
+            placeholder='Vervag jouw todo...'
+            style={{
+              background: "#222222",
+              padding: "0px 10px",
+              borderRadius: "10px",
+              color: "white !important",
+              marginRight: "10px",
+            }}
             value={edittedValue}
             onChange={(e) => setEdittedValue(e.target.value)}
           />
         )}
-        {/* {children} */}
       </div>
       <div className='flex items-center'>
         {edit === todoKey ? (
