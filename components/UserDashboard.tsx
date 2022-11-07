@@ -95,8 +95,6 @@ export default function UserDashboard() {
     };
   }
 
-  console.log(todos);
-
   return (
     <Fragment>
       <div className='flex flex-col'>
